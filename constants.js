@@ -1,6 +1,5 @@
 const constants = {
-  TOKEN: '6e72b949614b1a3b17c4f7e0cf96889b918f79ab',
+  TOKEN: '13c14ecc2e144969d2b5a49f4be3e8f95baf74d6',
 }
 
-export default constants;
-
+export { constants };

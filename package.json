@@ -20,12 +20,13 @@
   "homepage": "https://github.com/helpthewalrus/solved_tasks_collection#readme",
   "dependencies": {
     "rxjs": "^6.5.2",
-    "ts-loader": "^6.0.4",
-    "typescript": "^3.5.3",
     "webpack": "^4.39.2",
     "webpack-dev-server": "^3.8.0"
   },
   "devDependencies": {
+    "eslint": "^6.2.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
     "webpack-cli": "^3.3.7"
   }
 }

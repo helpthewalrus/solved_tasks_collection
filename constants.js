@@ -1,3 +1,3 @@
 export const constants = {
-  TOKEN: 'c14d7501d1fd78b87d2d949cf8620753f4438d86',
+  TOKEN: 'Token 8d6e5bd8832434b9728cae0d35bc788b6ce3e9c1',
 };

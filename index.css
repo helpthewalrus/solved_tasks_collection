@@ -1,0 +1,52 @@
+:root {
+  --dark-purple: #464159;
+  --light-mint: #c7f0db;
+  --light-blue: #8bbabb;
+  --purple: #6c7b95;
+}
+
+body {
+  background-color: var(--dark-purple);
+  box-sizing: border-box;
+}
+
+.wrapper {
+  margin: 70px auto;
+  width: 80%;
+}
+
+ul {
+  list-style: none;
+  padding: 3%;
+  font-size: 20px;
+  color: var(--light-mint);
+}
+
+li {
+  padding: 10px;
+  margin-bottom: 5px;
+
+  border-radius: 5px;
+  color:var(--dark-purple);
+}
+
+li:nth-child(odd) {
+  background-color: var(--light-blue);
+}
+
+li:nth-child(even) {
+  background-color:var(--purple);
+}
+
+input[type=text] {
+  display: block;
+  width: 90%;
+  height: 30px;
+  padding: 5px;
+  margin: 10px auto;
+  background-color: var(--light-mint);
+  border-radius: 5px;
+
+  color: var(--dark-purple);
+  font-size: 24px;
+}

@@ -57,7 +57,6 @@ function filterUsers(users) {
 
 
 // CREATE OBJECT WITH FOUND DATA
-// eslint-disable-next-line no-unused-vars
 function createDataObject(users, repos) {
   return users.map((item, index) => ({ login: item.login, repos: repos[index].length }));
 }

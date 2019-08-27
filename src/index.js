@@ -57,6 +57,7 @@ function filterUsers(users) {
   return users;
 }
 
+
 /*------------------------------------
 -------FETCHING INFO FUNCTIONS--------
 ------------------------------------*/
@@ -79,13 +80,16 @@ const fetchRepos = (login) => fromFetch(urlUserReposGenerator(login), {
 );
 
 
-// FUNCTION FOR LOADING ALL FOUND USERS' REPOS
+// FUNCTION FOR LOADING ALL FOUND USERS' REPOS AND RENDERING FOUND DATA
 const parseFetchedRepos = (users) => from(users).pipe(
   map((user) => fetchRepos(user.login)),
   concatAll(),
   map((data, index) => ({ login: users[index].login, repos: data.length })),
   scan((inter, curr) => inter.concat(curr), []),
-  tap((data) => createOutput(data)),
+  tap((data) => {
+    outputTable.innerText = '';
+    createOutput(data);
+  }),
 ).subscribe();
 
 

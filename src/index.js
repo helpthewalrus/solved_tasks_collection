@@ -88,11 +88,7 @@ const fetchRepos = (login) => fromFetch(urlUserReposGenerator(login), {
 const parseFetchedRepos = (users) => {
   const reposStreams = users.map((user) => fetchRepos(user.login));
 
-  return combineLatest(
-    reposStreams,
-  ).pipe(
-    map((repos) => createDataObject(users, repos)),
-  );
+  return combineLatest(reposStreams, (...repos) => createDataObject(users, repos));
 };
 
 

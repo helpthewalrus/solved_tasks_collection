@@ -86,12 +86,13 @@ const fetchRepos = (login) => fromFetch(urlUserReposGenerator(login), {
 
 // FUNCTION FOR LOADING ALL FOUND USERS' REPOS AND RENDERING FOUND DATA
 const parseFetchedRepos = (users) => {
-  combineLatest(
-    users.map((user) => fetchRepos(user.login)),
+  const reposStreams = users.map((user) => fetchRepos(user.login));
+
+  return combineLatest(
+    reposStreams,
   ).pipe(
     map((repos) => createDataObject(users, repos)),
-    tap((data) => createOutput(data)),
-  ).subscribe();
+  );
 };
 
 
@@ -132,6 +133,7 @@ fromEvent(input, 'input')
     distinctUntilChanged(),
     switchMap(fetchedData),
     filter((users) => filterUsers(users)),
-    tap((fetchedUserData) => parseFetchedRepos(fetchedUserData.items)),
+    switchMap((fetchedUserData) => parseFetchedRepos(fetchedUserData.items)),
+    tap((data) => createOutput(data)),
   )
   .subscribe();

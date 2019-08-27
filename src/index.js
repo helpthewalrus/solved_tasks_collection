@@ -86,11 +86,7 @@ const parseFetchedRepos = (users) => from(users).pipe(
   concatAll(),
   map((data, index) => ({ login: users[index].login, repos: data.length })),
   scan((inter, curr) => inter.concat(curr), []),
-  tap((data) => {
-    outputTable.innerText = '';
-    createOutput(data);
-  }),
-).subscribe();
+);
 
 
 // FUNCTION FOR FETCHING USERS' LOGINS FROM THE SERVER
@@ -130,6 +126,10 @@ fromEvent(input, 'input')
     distinctUntilChanged(),
     switchMap(fetchedData),
     filter((users) => filterUsers(users)),
-    tap((fetchedUserData) => parseFetchedRepos(fetchedUserData.items)),
+    switchMap((fetchedUserData) => parseFetchedRepos(fetchedUserData.items)),
+    tap((data) => {
+      outputTable.innerText = '';
+      createOutput(data);
+    }),
   )
   .subscribe();

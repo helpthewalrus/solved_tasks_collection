@@ -1,11 +1,12 @@
-import { fromEvent, of, zip } from 'rxjs';
+import { fromEvent, of, from } from 'rxjs';
 import { fromFetch } from 'rxjs/fetch';
 import {
   debounceTime,
   distinctUntilChanged,
   map,
   switchMap,
-  concatMap,
+  concatAll,
+  scan,
   tap,
   catchError,
   filter,
@@ -22,14 +23,6 @@ const outputTable = document.getElementById('output');
 /*--------------------------
 -------DOM FUNCTIONS--------
 ---------------------------*/
-
-// FUNCTION TO CREATE LI ELEMENT WITH LOGIN AND NUMBER OF REPOS
-// eslint-disable-next-line no-unused-vars
-function createLiElement(login, repos) {
-  const listItem = document.createElement('li');
-  listItem.innerText = `login: ${login}, repos: ${repos}`;
-  return listItem;
-}
 
 function createRow(login, repos, rowType) {
   const row = document.createElement('tr');
@@ -65,12 +58,6 @@ function filterUsers(users) {
 }
 
 
-// CREATE OBJECT WITH FOUND DATA
-function createDataObject(users, repos) {
-  return users.items.map((item, index) => ({ login: item.login, repos: repos[index].length }));
-}
-
-
 /*------------------------------------
 -------FETCHING INFO FUNCTIONS--------
 ------------------------------------*/
@@ -93,13 +80,13 @@ const fetchRepos = (login) => fromFetch(urlUserReposGenerator(login), {
 );
 
 
-// FUNCTION FOR LOADING ALL FOUND USERS' REPOS
-const parseFetchedRepos = (users) => {
-  const result = zip(
-    ...users.map((user) => fetchRepos(user.login)),
-  );
-  return result;
-};
+// FUNCTION FOR LOADING ALL FOUND USERS' REPOS AND RENDERING FOUND DATA
+const parseFetchedRepos = (users) => from(users).pipe(
+  map((user) => fetchRepos(user.login)),
+  concatAll(),
+  map((data, index) => ({ login: users[index].login, repos: data.length })),
+  scan((inter, curr) => inter.concat(curr), []),
+);
 
 
 // FUNCTION FOR FETCHING USERS' LOGINS FROM THE SERVER
@@ -139,8 +126,10 @@ fromEvent(input, 'input')
     distinctUntilChanged(),
     switchMap(fetchedData),
     filter((users) => filterUsers(users)),
-    concatMap((fetchedUserData) => parseFetchedRepos(fetchedUserData.items),
-      (users, repos) => createDataObject(users, repos)),
-    tap((data) => createOutput(data)),
+    switchMap((fetchedUserData) => parseFetchedRepos(fetchedUserData.items)),
+    tap((data) => {
+      outputTable.innerText = '';
+      createOutput(data);
+    }),
   )
   .subscribe();
